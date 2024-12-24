@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
-import { PaymentStageDto } from '../dto/create-project.dto'
 
 @Schema({ timestamps: true })
 export class Project extends Document {
@@ -41,10 +40,19 @@ export class Project extends Document {
   selected_deliverables: string[];
 
   @Prop({
-    type: [SchemaFactory.createForClass(PaymentStageDto)],
+    type: [
+      {
+        stage: { type: String },
+        amount: { type: String },
+        _id: false,
+      },
+    ],
     default: [],
   })
-  payment_per_stage: PaymentStageDto[];
+  payment_per_stage: {
+    stage: string;
+    amount: string;
+  }[];
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, required: true })
   client_id: string;
