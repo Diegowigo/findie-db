@@ -22,7 +22,7 @@ import {
   
   export class CreateProductDto {
     @IsString()
-    @IsNotEmpty({ message: 'El nombre es obligatorio' })
+    @IsNotEmpty()
     name: string;
   
     @IsArray()

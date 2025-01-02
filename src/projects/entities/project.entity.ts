@@ -44,7 +44,7 @@ export class Project extends Document {
       {
         stage: { type: String },
         amount: { type: String },
-        _id: false,
+        _id: false
       },
     ],
     default: [],
