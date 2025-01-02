@@ -33,8 +33,8 @@ export class Project extends Document {
   @Prop()
   inspiration_text: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId })
-  product_id: string;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Product' })
+  product_id: mongoose.Schema.Types.ObjectId;
 
   @Prop({ type: [String], default: [] })
   selected_deliverables: string[];
