@@ -8,25 +8,35 @@ import { UpdateClientDto } from './dto/update-client.dto';
 @Injectable()
 export class ClientsService {
   constructor(
-    @InjectModel('Client') private readonly clientModel: Model<Client>,
+    @InjectModel(Client.name) private readonly clientModel: Model<Client>,
   ) {}
 
   async create(createClientDto: CreateClientDto): Promise<Client> {
-    const createdClient = new this.clientModel(createClientDto);
-    return createdClient.save();
+      return this.clientModel.create(createClientDto);
   }
 
   async findAll(): Promise<Client[]> {
-    return this.clientModel.find().exec();
+    return this.clientModel.find().populate('projects').exec();
   }
 
   async findOne(id: string): Promise<Client> {
-    return this.clientModel.findById(id).exec();
-  }
+      const client = await this.clientModel.findById(id).populate('projects').exec();
+      if (!client) {
+        throw new NotFoundException(`Client with ID "${id}" not found`);
+      }
+      return client;
+    }
 
   async update(id: string, updateClientDto: UpdateClientDto): Promise<Client> {
-    return this.clientModel.findByIdAndUpdate(id, updateClientDto, { new: true }).exec();
-  }
+      const updatedClient = await this.clientModel
+        .findByIdAndUpdate(id, updateClientDto, { new: true })
+        .populate('projects')
+        .exec();
+      if (!updatedClient) {
+        throw new NotFoundException(`Project with ID "${id}" not found`);
+      }
+      return updatedClient;
+    }
 
   async remove(id: string): Promise<{ message: string, client: any }> {
     const result = await this.clientModel.findByIdAndDelete(id).exec();
