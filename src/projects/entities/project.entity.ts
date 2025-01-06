@@ -54,11 +54,11 @@ export class Project extends Document {
     amount: string;
   }[];
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, required: true })
-  client_id: string;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Client', required: true })
+  client_id: mongoose.Schema.Types.ObjectId;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, required: true })
-  freelancer_id: string;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Freelancer', required: true })
+  freelancer_id: mongoose.Schema.Types.ObjectId;
 }
 
 export const ProjectSchema = SchemaFactory.createForClass(Project);

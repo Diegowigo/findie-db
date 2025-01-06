@@ -14,11 +14,21 @@ export class ProjectsService {
   }
 
   async findAll(): Promise<Project[]> {
-    return this.projectModel.find().populate('product_id').exec();
+    return this.projectModel
+      .find()
+      .populate('product_id')
+      .populate('client_id')
+      .populate('freelancer_id')
+      .exec();
   }
 
   async findOne(id: string): Promise<Project> {
-    const project = await this.projectModel.findById(id).populate('product_id').exec();
+    const project = await this.projectModel
+      .findById(id)
+      .populate('product_id')
+      .populate('client_id')
+      .populate('freelancer_id')
+      .exec();
     if (!project) {
       throw new NotFoundException(`Project with ID "${id}" not found`);
     }
@@ -29,6 +39,8 @@ export class ProjectsService {
     const updatedProject = await this.projectModel
       .findByIdAndUpdate(id, updateProjectDto, { new: true })
       .populate('product_id')
+      .populate('client_id')
+      .populate('freelancer_id')
       .exec();
     if (!updatedProject) {
       throw new NotFoundException(`Project with ID "${id}" not found`);
