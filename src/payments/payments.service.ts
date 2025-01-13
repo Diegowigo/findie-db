@@ -13,33 +13,27 @@ export class PaymentsService {
     @InjectModel(Project.name) private projectModel: Model<Project>,
   ) {}
 
-  // Crear un nuevo pago y actualizar payment_per_stage en el proyecto
   async createPayment(createPaymentDto: CreatePaymentDto): Promise<Payment> {
     const { stage, amount, project_id } = createPaymentDto;
 
-    // Verificar que el proyecto existe
     const project = await this.projectModel.findById(project_id);
     if (!project) {
       throw new NotFoundException(`Project with ID "${project_id}" not found`);
     }
 
-    // Crear el nuevo pago
     const payment = new this.paymentModel({ stage, amount, project_id });
     await payment.save();
 
-    // Actualizar la clave payment_per_stage en el proyecto
     project.payment_per_stage.push({ stage, amount });
     await project.save();
 
     return payment;
   }
 
-  // Obtener todos los pagos
   async findAll(): Promise<Payment[]> {
     return this.paymentModel.find().populate('project_id').exec();
   }
 
-  // Obtener un pago por ID
   async findOne(paymentId: string): Promise<Payment> {
     const payment = await this.paymentModel.findById(paymentId).populate('project_id').exec();
     if (!payment) {
@@ -48,19 +42,16 @@ export class PaymentsService {
     return payment;
   }
 
-  // Actualizar un pago y modificar payment_per_stage en el proyecto relacionado
   async updatePayment(paymentId: string, updateDto: UpdatePaymentDto): Promise<Payment> {
     const payment = await this.paymentModel.findById(paymentId);
     if (!payment) {
       throw new NotFoundException(`Payment with ID "${paymentId}" not found`);
     }
 
-    // Actualizar el pago
     if (updateDto.stage) payment.stage = updateDto.stage;
     if (updateDto.amount) payment.amount = updateDto.amount;
     await payment.save();
 
-    // Actualizar payment_per_stage en el proyecto
     const project = await this.projectModel.findById(payment.project_id);
     if (!project) {
       throw new NotFoundException(`Project with ID "${payment.project_id}" not found`);
@@ -80,17 +71,14 @@ export class PaymentsService {
     return payment;
   }
 
-  // Eliminar un pago y actualizar payment_per_stage en el proyecto
   async deletePayment(paymentId: string): Promise<{ message: string; payment: Payment }> {
     const payment = await this.paymentModel.findById(paymentId);
     if (!payment) {
       throw new NotFoundException(`Payment with ID "${paymentId}" not found`);
     }
 
-    // Eliminar el pago
     await this.paymentModel.findByIdAndDelete(paymentId);
 
-    // Eliminar la etapa de pago del proyecto
     const project = await this.projectModel.findById(payment.project_id);
     if (project) {
       project.payment_per_stage = project.payment_per_stage.filter(
