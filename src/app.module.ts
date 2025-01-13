@@ -5,11 +5,12 @@ import { ProjectsModule } from './projects/projects.module';
 import { ProductsModule } from './products/products.module';
 import { ClientsModule } from './clients/clients.module';
 import { FreelancersModule } from './freelancers/freelancers.module';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
     isGlobal: true,
-  }), MongooseModule.forRoot(process.env.DATABASE_URL), ProjectsModule, ProductsModule, ClientsModule, FreelancersModule],
+  }), MongooseModule.forRoot(process.env.DATABASE_URL), ProjectsModule, ProductsModule, ClientsModule, FreelancersModule, PaymentsModule],
   controllers: [],
   providers: [],
   exports: []
