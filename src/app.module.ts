@@ -6,11 +6,12 @@ import { ProductsModule } from './products/products.module';
 import { ClientsModule } from './clients/clients.module';
 import { FreelancersModule } from './freelancers/freelancers.module';
 import { PaymentsModule } from './payments/payments.module';
+import { FeedbackModule } from './feedback/feedback.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
     isGlobal: true,
-  }), MongooseModule.forRoot(process.env.DATABASE_URL), ProjectsModule, ProductsModule, ClientsModule, FreelancersModule, PaymentsModule],
+  }), MongooseModule.forRoot(process.env.DATABASE_URL), ProjectsModule, ProductsModule, ClientsModule, FreelancersModule, PaymentsModule, FeedbackModule],
   controllers: [],
   providers: [],
   exports: []
