@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model, Types } from 'mongoose';
 import { Project } from './entities/project.entity';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
@@ -47,6 +47,30 @@ export class ProjectsService {
     }
     return updatedProject;
   }
+
+  async assignFreelancerToProject(
+    projectId: string,
+    freelancerId: string,
+  ): Promise<Project> {
+  
+    if (!Types.ObjectId.isValid(freelancerId)) {
+      throw new Error('Invalid freelancer ID');
+    }
+  
+    const project = await this.projectModel.findById(projectId);
+  
+    if (!project) {
+      throw new NotFoundException('Project not found');
+    }
+  
+    project.freelancer_id = new (mongoose.Types.ObjectId as any)(freelancerId);
+    project.status = 'In Progress';
+  
+    await project.save();
+  
+    return project;
+  }
+  
 
   async remove(id: string): Promise<{ message: string, project: Project }> {
     const result = await this.projectModel.findByIdAndDelete(id).exec();

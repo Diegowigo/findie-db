@@ -31,6 +31,18 @@ export class ProjectsController {
     return this.projectsService.findOne(id);
   }
 
+  @Put(':projectId/assign-freelancer')
+  async assignFreelancer(
+    @Param('projectId') projectId: string,
+    @Body() body: { freelancerId: string },
+  ): Promise<Project> {
+    const { freelancerId } = body;
+    return this.projectsService.assignFreelancerToProject(
+      projectId,
+      freelancerId,
+    );
+  }
+
   @Put(':id')
   async update(
     @Param('id') id: string,

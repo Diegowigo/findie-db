@@ -59,6 +59,9 @@ export class Project extends Document {
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Freelancer', required: true })
   freelancer_id: mongoose.Schema.Types.ObjectId;
+
+  @Prop({ type: String, default: 'Pending Approval' })
+  status: string;
 }
 
 export const ProjectSchema = SchemaFactory.createForClass(Project);

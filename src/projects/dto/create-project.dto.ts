@@ -80,4 +80,8 @@ export class CreateProjectDto {
   @IsNotEmpty()
   @IsMongoId()
   freelancer_id: string;
+
+  @IsString()
+  @IsOptional()
+  status?: string;
 }
