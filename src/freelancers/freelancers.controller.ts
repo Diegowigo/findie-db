@@ -6,6 +6,7 @@ import {
   Param,
   Put,
   Delete,
+  Query
 } from '@nestjs/common';
 import { FreelancersService } from './freelancers.service';
 import { CreateFreelancerDto } from './dto/create-freelancer.dto';
@@ -24,6 +25,15 @@ export class FreelancersController {
   @Get()
   async findAll(): Promise<Freelancer[]> {
     return this.freelancersService.findAll();
+  }
+  
+  @Get('search')
+  async searchFreelancers(
+    @Query('specialty') specialty?: string,
+    @Query('availability') availability?: string,
+  ): Promise<Freelancer[]> {
+    const filters = { specialty, availability };
+    return this.freelancersService.findByFilters(filters);
   }
 
   @Get(':id')
