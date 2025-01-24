@@ -7,15 +7,15 @@ import { join } from 'path';
 @Module({
   imports: [
     MailerModule.forRootAsync({
-      imports: [ConfigModule], // Permite usar variables de entorno
+      imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         transport: {
-          host: configService.get<string>('MAIL_HOST'), // SMTP host desde .env
-          port: configService.get<number>('MAIL_PORT'), // SMTP port desde .env
-          secure: configService.get<boolean>('MAIL_SECURE'), // Define si usa SSL/TLS
+          host: configService.get<string>('MAIL_HOST'),
+          port: configService.get<number>('MAIL_PORT'),
+          secure: configService.get<boolean>('MAIL_SECURE'),
           auth: {
-            user: configService.get<string>('MAIL_USER'), // Usuario SMTP desde .env
-            pass: configService.get<string>('MAIL_PASSWORD'), // Contraseña SMTP desde .env
+            user: configService.get<string>('MAIL_USER'),
+            pass: configService.get<string>('MAIL_PASSWORD'),
           },
         },
         defaults: {
@@ -29,7 +29,7 @@ import { join } from 'path';
           },
         },
       }),
-      inject: [ConfigService], // Inyecta el ConfigService para acceder a .env
+      inject: [ConfigService],
     }),
   ],
 })

@@ -7,10 +7,10 @@ export class MailService {
 
   async sendWelcomeEmail(to: string, username: string) {
     await this.mailerService.sendMail({
-      to, // Dirección del destinatario
-      subject: 'Bienvenido a nuestra plataforma', // Asunto del correo
-      template: './welcome', // Nombre del archivo de la plantilla (sin extensión)
-      context: { // Datos dinámicos para la plantilla
+      to,
+      subject: 'Bienvenido a nuestra plataforma',
+      template: './welcome',
+      context: {
         username,
       },
     });
@@ -20,7 +20,7 @@ export class MailService {
     await this.mailerService.sendMail({
       to,
       subject,
-      text: message, // Contenido como texto plano
+      text: message,
     });
   }
 }
