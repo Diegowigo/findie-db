@@ -7,14 +7,15 @@ import { ClientsModule } from './clients/clients.module';
 import { FreelancersModule } from './freelancers/freelancers.module';
 import { PaymentsModule } from './payments/payments.module';
 import { FeedbackModule } from './feedback/feedback.module';
-import { MailModule } from './mail/mail.module';
+import { NotificationsService } from './notifications/notifications.service';
+import { NotificationsController } from './notifications/notifications.controller';
 
 @Module({
   imports: [ConfigModule.forRoot({
     isGlobal: true,
-  }), MongooseModule.forRoot(process.env.DATABASE_URL), ProjectsModule, ProductsModule, ClientsModule, FreelancersModule, PaymentsModule, FeedbackModule, MailModule],
-  controllers: [],
-  providers: [],
+  }), MongooseModule.forRoot(process.env.DATABASE_URL), ProjectsModule, ProductsModule, ClientsModule, FreelancersModule, PaymentsModule, FeedbackModule],
+  controllers: [NotificationsController],
+  providers: [NotificationsService],
   exports: []
 })
 export class AppModule {}
