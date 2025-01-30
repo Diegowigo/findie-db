@@ -1,13 +1,23 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, HttpException, HttpStatus } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 
 @Controller('notifications')
 export class NotificationsController {
-  constructor(private readonly NotificationsService: NotificationsService) {}
+  constructor(private readonly notificationsService: NotificationsService) {}
 
   @Post('email')
-  async sendNotification(@Body() body: { templateId: string; email: string; data: Record<string, any> }) {
+  async sendNotification(
+    @Body() body: { templateId: string; email: string; data: [string] },
+  ) {
     const { templateId, email, data } = body;
-    return this.NotificationsService.sendEmail(templateId, email, data);
+
+    if (!templateId || !email || !data) {
+      throw new HttpException(
+        'Template ID, email, and data are required.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    return this.notificationsService.sendEmail(templateId, email, data);
   }
 }

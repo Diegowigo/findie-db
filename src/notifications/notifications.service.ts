@@ -4,19 +4,22 @@ import axios, { AxiosError } from 'axios';
 @Injectable()
 export class NotificationsService {
   private readonly apiKey = process.env.KLAVIYO_API_KEY;
-  private readonly baseUrl = 'https://a.klaviyo.com/api';
+  private readonly baseUrl = 'https://a.klaviyo.com/api/v1';
 
-  async sendEmail(templateId: string, recipientEmail: string, data: Record<string, any>) {
+  async sendEmail(templateId: string, email: string, data: [string]) {
     try {
       if (!this.apiKey) {
-        throw new HttpException('Internal configuration error', HttpStatus.INTERNAL_SERVER_ERROR);
+        throw new HttpException(
+          'Internal configuration error',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
       }
 
       const response = await axios.post(
-        `${this.baseUrl}/v1/email-template/send`,
+        `${this.baseUrl}/email/send/`,
         {
-          template_id: templateId,
-          to: recipientEmail,
+          templateId,
+          email,
           data,
         },
         {
