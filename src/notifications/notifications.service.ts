@@ -4,33 +4,62 @@ import axios, { AxiosError } from 'axios';
 @Injectable()
 export class NotificationsService {
   private readonly apiKey = process.env.KLAVIYO_API_KEY;
-  private readonly baseUrl = 'https://a.klaviyo.com/api/v1';
+  private readonly baseUrl = 'https://a.klaviyo.com/api';
+  private readonly revision = '2023-12-15';
 
-  async sendEmail(templateId: string, email: string, data: [string]) {
+  async sendEmail(
+    templateId: string,
+    email: string,
+    data: Record<string, any>,
+  ) {
     try {
       if (!this.apiKey) {
         throw new HttpException(
-          'Internal configuration error',
+          'Internal configuration error: Klaviyo API key is missing.',
           HttpStatus.INTERNAL_SERVER_ERROR,
         );
       }
 
       const response = await axios.post(
-        `${this.baseUrl}/email/send/`,
+        `${this.baseUrl}/email-templates/${templateId}/send`,
         {
-          templateId,
-          email,
-          data,
+          from_email: 'contacto@send.findie.global',
+          to: [{ email }],
+          context: data,
         },
         {
           headers: {
             Authorization: `Klaviyo-API-Key ${this.apiKey}`,
             'Content-Type': 'application/json',
+            Revision: this.revision,
           },
         },
       );
 
       return response.data;
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  async listTemplates() {
+    try {
+      if (!this.apiKey) {
+        throw new HttpException(
+          'Internal configuration error: Klaviyo API key is missing.',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+
+      const response = await axios.get(`${this.baseUrl}/templates`, {
+        headers: {
+          Authorization: `Klaviyo-API-Key ${this.apiKey}`,
+          'Content-Type': 'application/json',
+          Revision: this.revision,
+        },
+      });
+
+      return response.data.data;
     } catch (error) {
       this.handleError(error);
     }
@@ -44,7 +73,7 @@ export class NotificationsService {
         const { status, data } = axiosError.response;
         throw new HttpException(
           {
-            message: 'Error sending email to Klaviyo',
+            message: 'Error communicating with Klaviyo',
             statusCode: status,
             details: data,
           },

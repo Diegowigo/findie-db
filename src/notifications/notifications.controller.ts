@@ -1,13 +1,25 @@
-import { Controller, Post, Body, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 
 @Controller('notifications')
 export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
 
-  @Post('email')
-  async sendNotification(
-    @Body() body: { templateId: string; email: string; data: [string] },
+  @Post('send-email')
+  async sendEmail(
+    @Body()
+    body: {
+      templateId: string;
+      email: string;
+      data: Record<string, any>;
+    },
   ) {
     const { templateId, email, data } = body;
 
@@ -19,5 +31,10 @@ export class NotificationsController {
     }
 
     return this.notificationsService.sendEmail(templateId, email, data);
+  }
+
+  @Get('templates')
+  async listTemplates() {
+    return this.notificationsService.listTemplates();
   }
 }
