@@ -9,13 +9,24 @@ import { PaymentsModule } from './payments/payments.module';
 import { FeedbackModule } from './feedback/feedback.module';
 import { NotificationsService } from './notifications/notifications.service';
 import { NotificationsController } from './notifications/notifications.controller';
+import { KlaviyoController } from './klaviyo/klaviyo.controller';
+import { KlaviyoService } from './klaviyo/klaviyo.service';
 
 @Module({
-  imports: [ConfigModule.forRoot({
-    isGlobal: true,
-  }), MongooseModule.forRoot(process.env.DATABASE_URL), ProjectsModule, ProductsModule, ClientsModule, FreelancersModule, PaymentsModule, FeedbackModule],
-  controllers: [NotificationsController],
-  providers: [NotificationsService],
-  exports: []
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    MongooseModule.forRoot(process.env.DATABASE_URL),
+    ProjectsModule,
+    ProductsModule,
+    ClientsModule,
+    FreelancersModule,
+    PaymentsModule,
+    FeedbackModule,
+  ],
+  controllers: [NotificationsController, KlaviyoController],
+  providers: [NotificationsService, KlaviyoService],
+  exports: [],
 })
 export class AppModule {}
