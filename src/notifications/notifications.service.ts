@@ -8,12 +8,11 @@ export class NotificationsService {
 
   constructor(private readonly klaviyoService: KlaviyoService) {
     this.transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 465,
-      secure: true,
+      service: 'gmail',
+      port: 587,
       auth: {
         user: 'diegowigodski@gmail.com',
-        pass: process.env.EMAIL_PASSWORD,
+        pass: process.env.GMAIL_PASSWORD,
       },
     });
   }
