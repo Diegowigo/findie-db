@@ -6,12 +6,12 @@ import { SendMailDto } from './dto/create-notifications.dto';
 export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
 
-  @Post('send')
-  async sendMail(@Body() body: SendMailDto) {
-    return this.notificationsService.sendKlaviyoTemplate(
-      body.to,
-      body.subject,
+  @Post('send-email')
+  async sendTemplateEmail(@Body() body: SendMailDto) {
+    return this.notificationsService.sendTemplateEmail(
       body.templateId,
+      body.email,
+      body.subject,
     );
   }
 }

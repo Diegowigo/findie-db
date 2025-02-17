@@ -1,13 +1,13 @@
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 export class SendMailDto {
+  @IsString()
+  @IsNotEmpty()
+  templateId: string;
+
   @IsEmail()
-  to: string;
+  email: string;
 
   @IsString()
   @IsNotEmpty()
   subject: string;
-
-  @IsString()
-  @IsNotEmpty()
-  templateId: string;
 }

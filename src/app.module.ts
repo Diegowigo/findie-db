@@ -11,6 +11,7 @@ import { NotificationsService } from './notifications/notifications.service';
 import { NotificationsController } from './notifications/notifications.controller';
 import { KlaviyoController } from './klaviyo/klaviyo.controller';
 import { KlaviyoService } from './klaviyo/klaviyo.service';
+import { SesService } from './ses/ses.service';
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import { KlaviyoService } from './klaviyo/klaviyo.service';
     FeedbackModule,
   ],
   controllers: [NotificationsController, KlaviyoController],
-  providers: [NotificationsService, KlaviyoService],
+  providers: [NotificationsService, KlaviyoService, SesService],
   exports: [],
 })
 export class AppModule {}
