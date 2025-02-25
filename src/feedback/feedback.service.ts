@@ -17,21 +17,11 @@ export class FeedbackService {
   }
 
   async findAll(): Promise<Feedback[]> {
-    return this.feedbackModel
-      .find()
-      .populate('client_id', 'name email')
-      .populate('project_id', 'title description')
-      .populate('freelancer_id', 'name specialty')
-      .exec();
+    return this.feedbackModel.find().exec();
   }
 
   async findOne(id: string): Promise<Feedback> {
-    const feedback = await this.feedbackModel
-      .findById(id)
-      .populate('client_id', 'name email')
-      .populate('project_id', 'title description')
-      .populate('freelancer_id', 'name specialty')
-      .exec();
+    const feedback = await this.feedbackModel.findById(id).exec();
 
     if (!feedback) {
       throw new NotFoundException(`Feedback with ID ${id} not found`);
@@ -39,12 +29,12 @@ export class FeedbackService {
     return feedback;
   }
 
-  async update(id: string, updateFeedbackDto: UpdateFeedbackDto): Promise<Feedback> {
+  async update(
+    id: string,
+    updateFeedbackDto: UpdateFeedbackDto,
+  ): Promise<Feedback> {
     const updatedFeedback = await this.feedbackModel
       .findByIdAndUpdate(id, updateFeedbackDto, { new: true })
-      .populate('client_id', 'name email')
-      .populate('project_id', 'title description')
-      .populate('freelancer_id', 'name specialty')
       .exec();
 
     if (!updatedFeedback) {

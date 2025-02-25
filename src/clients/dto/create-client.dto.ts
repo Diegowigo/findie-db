@@ -1,30 +1,43 @@
-import { IsString, IsArray, IsNotEmpty, ValidateNested, IsEmail } from 'class-validator';
-import { Type } from 'class-transformer';
-
-class ContactDetailsDto {
-  @IsEmail()
-  @IsNotEmpty()
-  email: string;
-
-  @IsString()
-  @IsNotEmpty()
-  phone: string;
-}
+import { IsString, IsBoolean, IsEmail, IsNotEmpty } from 'class-validator';
 
 export class CreateClientDto {
   @IsString()
   @IsNotEmpty()
-  name: string;
+  avatar_style: string;
 
-  @ValidateNested()
-  @Type(() => ContactDetailsDto)
-  contact_details: ContactDetailsDto;
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  has_default_password: boolean;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  is_disabled: boolean;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  is_first_render: boolean;
 
   @IsString()
   @IsNotEmpty()
-  company_info: string;
+  last_name: string;
 
-  @IsArray()
-  @IsString({ each: true })
-  projects: string[];
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @IsString()
+  @IsNotEmpty()
+  profile_id: string;
+
+  @IsString()
+  @IsNotEmpty()
+  user_type: string;
+
+  @IsString()
+  @IsNotEmpty()
+  token: string;
 }
