@@ -24,7 +24,7 @@ export class PaymentsService {
     const payment = new this.paymentModel({ stage, amount, project_id });
     await payment.save();
 
-    project.payment_per_stage.push({ stage, amount });
+    project.payments.push({ stage, amount });
     await project.save();
 
     return payment;
@@ -35,14 +35,20 @@ export class PaymentsService {
   }
 
   async findOne(paymentId: string): Promise<Payment> {
-    const payment = await this.paymentModel.findById(paymentId).populate('project_id').exec();
+    const payment = await this.paymentModel
+      .findById(paymentId)
+      .populate('project_id')
+      .exec();
     if (!payment) {
       throw new NotFoundException(`Payment with ID "${paymentId}" not found`);
     }
     return payment;
   }
 
-  async updatePayment(paymentId: string, updateDto: UpdatePaymentDto): Promise<Payment> {
+  async updatePayment(
+    paymentId: string,
+    updateDto: UpdatePaymentDto,
+  ): Promise<Payment> {
     const payment = await this.paymentModel.findById(paymentId);
     if (!payment) {
       throw new NotFoundException(`Payment with ID "${paymentId}" not found`);
@@ -54,14 +60,16 @@ export class PaymentsService {
 
     const project = await this.projectModel.findById(payment.project_id);
     if (!project) {
-      throw new NotFoundException(`Project with ID "${payment.project_id}" not found`);
+      throw new NotFoundException(
+        `Project with ID "${payment.project_id}" not found`,
+      );
     }
 
-    const stageIndex = project.payment_per_stage.findIndex(
+    const stageIndex = project.payments.findIndex(
       (p) => p.stage === payment.stage,
     );
     if (stageIndex !== -1) {
-      project.payment_per_stage[stageIndex] = {
+      project.payments[stageIndex] = {
         stage: payment.stage,
         amount: payment.amount,
       };
@@ -71,7 +79,9 @@ export class PaymentsService {
     return payment;
   }
 
-  async deletePayment(paymentId: string): Promise<{ message: string; payment: Payment }> {
+  async deletePayment(
+    paymentId: string,
+  ): Promise<{ message: string; payment: Payment }> {
     const payment = await this.paymentModel.findById(paymentId);
     if (!payment) {
       throw new NotFoundException(`Payment with ID "${paymentId}" not found`);
@@ -81,7 +91,7 @@ export class PaymentsService {
 
     const project = await this.projectModel.findById(payment.project_id);
     if (project) {
-      project.payment_per_stage = project.payment_per_stage.filter(
+      project.payments = project.payments.filter(
         (p) => p.stage !== payment.stage,
       );
       await project.save();

@@ -1,67 +1,54 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
+import { ProjectPrice, ProjectProfits } from '../interfaces/project.interface';
+
+export type ProjectDocument = Project & Document;
 
 @Schema({ timestamps: true })
-export class Project extends Document {
-  @Prop({ required: true })
-  title: string;
+export class Project {
+  @Prop({ type: Object, required: true })
+  price: ProjectPrice;
+
+  @Prop({ type: Object, required: true })
+  profits: ProjectProfits;
 
   @Prop({ required: true })
-  description: string;
+  evaluation_status: string;
 
-  @Prop({ type: [String], default: [] })
-  deliverables_by_status: string[];
+  @Prop({ required: true })
+  project_status: string;
 
-  @Prop()
-  investment: string;
+  @Prop({ type: Array, default: [] })
+  staff: any[];
 
-  @Prop()
-  start_preference: string;
+  @Prop({ type: Array, default: [] })
+  payments: any[];
 
-  @Prop()
-  work_preference: string;
+  @Prop({ required: true })
+  with_currency: boolean;
 
-  @Prop({ type: [String], default: [] })
-  specific_requirements: string[];
+  @Prop({ required: true })
+  is_brief_incomplete: boolean;
 
-  @Prop()
-  inspiration_links: string;
-
-  @Prop({ type: [String], default: [] })
-  inspiration_images: string[];
-
-  @Prop()
-  inspiration_text: string;
-
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Product' })
-  product_id: mongoose.Schema.Types.ObjectId;
-
-  @Prop({ type: [String], default: [] })
-  selected_deliverables: string[];
+  @Prop({ required: true })
+  has_offers: boolean;
 
   @Prop({
-    type: [
-      {
-        stage: { type: String },
-        amount: { type: String },
-        _id: false
-      },
-    ],
-    default: [],
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Client',
+    required: true,
   })
-  payment_per_stage: {
-    stage: string;
-    amount: string;
-  }[];
+  client: mongoose.Schema.Types.ObjectId;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Client', required: true })
-  client_id: mongoose.Schema.Types.ObjectId;
+  @Prop({ required: true })
+  brief: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Freelancer', required: true })
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Freelancer',
+    required: true,
+  })
   freelancer_id: mongoose.Schema.Types.ObjectId;
-
-  @Prop({ type: String, default: 'Pending Approval' })
-  status: string;
 }
 
 export const ProjectSchema = SchemaFactory.createForClass(Project);

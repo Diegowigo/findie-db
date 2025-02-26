@@ -7,7 +7,9 @@ import { UpdateProjectDto } from './dto/update-project.dto';
 
 @Injectable()
 export class ProjectsService {
-  constructor(@InjectModel(Project.name) private projectModel: Model<Project>) {}
+  constructor(
+    @InjectModel(Project.name) private projectModel: Model<Project>,
+  ) {}
 
   async create(createProjectDto: CreateProjectDto): Promise<Project> {
     return this.projectModel.create(createProjectDto);
@@ -16,8 +18,7 @@ export class ProjectsService {
   async findAll(): Promise<Project[]> {
     return this.projectModel
       .find()
-      .populate('product_id')
-      .populate('client_id')
+      .populate('client')
       .populate('freelancer_id')
       .exec();
   }
@@ -25,8 +26,7 @@ export class ProjectsService {
   async findOne(id: string): Promise<Project> {
     const project = await this.projectModel
       .findById(id)
-      .populate('product_id')
-      .populate('client_id')
+      .populate('client')
       .populate('freelancer_id')
       .exec();
     if (!project) {
@@ -35,11 +35,13 @@ export class ProjectsService {
     return project;
   }
 
-  async update(id: string, updateProjectDto: UpdateProjectDto): Promise<Project> {
+  async update(
+    id: string,
+    updateProjectDto: UpdateProjectDto,
+  ): Promise<Project> {
     const updatedProject = await this.projectModel
       .findByIdAndUpdate(id, updateProjectDto, { new: true })
-      .populate('product_id')
-      .populate('client_id')
+      .populate('client')
       .populate('freelancer_id')
       .exec();
     if (!updatedProject) {
@@ -52,27 +54,25 @@ export class ProjectsService {
     projectId: string,
     freelancerId: string,
   ): Promise<Project> {
-  
     if (!Types.ObjectId.isValid(freelancerId)) {
       throw new Error('Invalid freelancer ID');
     }
-  
+
     const project = await this.projectModel.findById(projectId);
-  
+
     if (!project) {
       throw new NotFoundException('Project not found');
     }
-  
+
     project.freelancer_id = new (mongoose.Types.ObjectId as any)(freelancerId);
-    project.status = 'In Progress';
-  
+    project.project_status = 'In Progress';
+
     await project.save();
-  
+
     return project;
   }
-  
 
-  async remove(id: string): Promise<{ message: string, project: Project }> {
+  async remove(id: string): Promise<{ message: string; project: Project }> {
     const result = await this.projectModel.findByIdAndDelete(id).exec();
     if (!result) {
       throw new NotFoundException(`Project with ID "${id}" not found.`);

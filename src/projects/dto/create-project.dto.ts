@@ -1,87 +1,94 @@
-import { IsString, IsArray, IsOptional, IsNotEmpty, ValidateNested, IsMongoId } from 'class-validator';
-import { Type } from 'class-transformer';
+import {
+  IsObject,
+  IsString,
+  IsBoolean,
+  IsNumber,
+  IsArray,
+  IsNotEmpty,
+  IsMongoId,
+} from 'class-validator';
 
-export class PaymentStageDto {
-  @IsString()
-  @IsNotEmpty()
-  stage: string;
+class ProjectPriceProductsDto {
+  @IsNumber()
+  total: number;
 
-  @IsString()
-  @IsNotEmpty()
-  amount: string;
+  @IsArray()
+  list: any[];
+}
+
+class ProjectPriceDto {
+  @IsObject()
+  products: ProjectPriceProductsDto;
+
+  @IsNumber()
+  subtotal: number;
+
+  @IsNumber()
+  search_amount: number;
+
+  @IsNumber()
+  findie_fee: number;
+
+  @IsNumber()
+  sii_tax: number;
+
+  @IsNumber()
+  external_fee: number;
+
+  @IsNumber()
+  total: number;
+}
+
+class ProjectProfitsDto {
+  @IsNumber()
+  freelancers: number;
+
+  @IsNumber()
+  client: number;
+
+  @IsNumber()
+  others: number;
+
+  @IsNumber()
+  total: number;
 }
 
 export class CreateProjectDto {
-  @IsString()
-  @IsNotEmpty()
-  title: string;
+  @IsObject()
+  price: ProjectPriceDto;
+
+  @IsObject()
+  profits: ProjectProfitsDto;
 
   @IsString()
-  @IsNotEmpty()
-  description: string;
+  evaluation_status: string;
+
+  @IsString()
+  project_status: string;
 
   @IsArray()
-  @IsOptional()
-  @IsString({ each: true })
-  deliverables_by_status?: string[];
-
-  @IsString()
-  @IsOptional()
-  investment?: string;
-
-  @IsString()
-  @IsOptional()
-  start_preference?: string;
-
-  @IsString()
-  @IsOptional()
-  work_preference?: string;
+  staff: any[];
 
   @IsArray()
-  @IsOptional()
-  @IsString({ each: true })
-  specific_requirements?: string[];
+  payments: any[];
+
+  @IsBoolean()
+  with_currency: boolean;
+
+  @IsBoolean()
+  is_brief_incomplete: boolean;
+
+  @IsBoolean()
+  has_offers: boolean;
 
   @IsString()
-  @IsOptional()
-  inspiration_links?: string;
-
-  @IsArray()
-  @IsOptional()
-  @IsString({ each: true })
-  inspiration_images?: string[];
+  client: string;
 
   @IsString()
-  @IsOptional()
-  inspiration_text?: string;
-
-  @IsString()
-  @IsOptional()
-  @IsMongoId()
-  product_id?: string;
-
-  @IsArray()
-  @IsOptional()
-  @IsString({ each: true })
-  selected_deliverables?: string[];
-
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => PaymentStageDto)
-  @IsOptional()
-  payment_per_stage?: PaymentStageDto[];
-
-  @IsString()
-  @IsNotEmpty()
-  @IsMongoId()
-  client_id: string;
+  brief: string;
 
   @IsString()
   @IsNotEmpty()
   @IsMongoId()
   freelancer_id: string;
-
-  @IsString()
-  @IsOptional()
-  status?: string;
 }
