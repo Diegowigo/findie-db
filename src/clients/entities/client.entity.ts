@@ -1,18 +1,19 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Document } from 'mongoose';
+import { Document } from 'mongoose';
+import { User } from 'src/clients/interfaces/client.interface';
 
-export interface User {
-  avatar_style: string;
-  email: string;
-  has_default_password: boolean;
-  is_disabled: boolean;
-  is_first_render: boolean;
-  last_name: string;
-  name: string;
-  profile_id: string;
-  user_type: string;
-  token: string;
-}
+// export interface User {
+//   avatar_style: string;
+//   email: string;
+//   has_default_password: boolean;
+//   is_disabled: boolean;
+//   is_first_render: boolean;
+//   last_name: string;
+//   name: string;
+//   profile_id: string;
+//   user_type: string;
+//   token: string;
+// }
 
 export interface Client extends User, Document {}
 

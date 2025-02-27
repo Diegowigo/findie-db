@@ -11,6 +11,7 @@ import { NotificationsService } from './notifications/notifications.service';
 import { NotificationsController } from './notifications/notifications.controller';
 import { KlaviyoController } from './klaviyo/klaviyo.controller';
 import { KlaviyoService } from './klaviyo/klaviyo.service';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { KlaviyoService } from './klaviyo/klaviyo.service';
     FreelancersModule,
     PaymentsModule,
     FeedbackModule,
+    CategoriesModule,
   ],
   controllers: [NotificationsController, KlaviyoController],
   providers: [NotificationsService, KlaviyoService],
